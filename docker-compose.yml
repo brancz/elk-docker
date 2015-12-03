@@ -6,7 +6,7 @@ elasticsearch:
 
 logstash:
   image: logstash
-  command: logstash -e 'input { udp { type => "syslog" port => 5140 codec => "json" } } output { elasticsearch { hosts => ["elasticsearch:9200"] } stdout {  } }'
+  command: logstash -e 'input { syslog { type => "syslog" port => 5140 codec => "json" } } filter { if [type] == "syslog" { json { source => "message" } } } output { elasticsearch { hosts => ["elasticsearch:9200"] } stdout {  } }'
   ports:
     - '5140:5140/udp'
   links:
